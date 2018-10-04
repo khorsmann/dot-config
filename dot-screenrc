@@ -1,0 +1,46 @@
+# ======================================================
+# Keybindings
+# ======================================================
+bind h hardcopy
+bind P paste          .
+bind ~ activity       "activity in %n (%t) [%w:%s]~"
+bind * activity       "activity in %n (%t) [%w:%s]"
+# bind g screen -t 'gatekeeper' 2 ssh -l nicogo blngho.ath.cx
+# bind t screen -t 'tower' 2 ssh nion@192.168.1.1
+# ===========================================
+#       CAPTION
+# ===========================================
+
+# einstellbare Überschrift der Screenleiste
+caption always "%{rw}%n%f %t %{wk} | %?%-Lw%?%{wb}[%n*%f %t]%?(%u)%?%{wk}%?%+Lw%? %{wk}"
+# ===========================================
+#       HARDSTATUS
+# ===========================================
+hardstatus alwayslastline "%{+b kr}host: %{kw}%H %{kg} | %c | %{ky}%d.%m.%Y | %{kr}(load: %l)%-0=%{kw}"
+
+#sorendition    kG # black  on bold green
+
+# setzen eines screen passworts
+# password lala
+# screen farben:
+# 0 Black             .    leave color unchanged
+# 1 Red               b    blue
+# 2 Green             c    cyan
+# 3 Brown / yellow    d    default color
+# 4 Blue              g    green           b    bold
+# 5 Purple            k    blacK           B    blinking
+# 6 Cyan              m    magenta         d    dim
+# 7 White             r    red             r    reverse
+# 8 unused/illegal    w    white           s    standout
+# 9 transparent       y    yellow          u    underline
+
+termcapinfo xterm ti@:te@
+#attrcolor b ".I"
+#termcapinfo xterm-256color 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
+#defbce "on"
+
+startup_message off
+term "screen-256color"
+# needs .ssh/rc
+setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
+# EOF  vim: ts=8 et nowrap
