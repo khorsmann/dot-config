@@ -1,0 +1,6 @@
+# .kshrc
+if [ -d /root/bin ]; then
+PATH=$PATH:/root/bin
+export PATH
+fi
+

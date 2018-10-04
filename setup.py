@@ -2,6 +2,7 @@
 import re
 import os
 import os.path
+import sys
 from collections import defaultdict
 import pprint
 
@@ -18,6 +19,7 @@ BLACKLIST = set([ MYNAME,
                 'README.md',
                 ] + GITFOLDER )
 
+
 def defaultdict_factory(*args, **kwargs):
     """ Create and return a defaultdict(dict).  """
     return defaultdict(dict, *args, **kwargs)
@@ -30,7 +32,17 @@ def addfiles(filedict, root, tfolder, files):
             continue
         if root in BLACKLIST:
             continue
+
         t = re.sub(r'^dot-', '.', s)
+        if sys.platform.startswith('openbsd'):
+            if s.startswith('dot-linux'):
+                continue
+            t = re.sub(r'^.openbsd-', '.', t)
+        if sys.platform.startswith('linux'):
+            if s.startswith('dot-openbsd'):
+                continue
+            t = re.sub(r'^.linux-', '.', t)
+
         s = os.path.join(root, s)
         filedict['FILES'][s] = os.path.join(tfolder, t)
     return filedict
@@ -48,7 +60,11 @@ def main():
                     filedict['FOLDERS'][tfolder] = oct(os.stat(root).st_mode & 0o777)
             filedict = addfiles(filedict, root, tfolder, files)
 
-    # pprint.pprint(filedict)
+    DEBUG = os.environ.get('DEBUG')
+    if isinstance(DEBUG, str):
+        if DEBUG.lower() == 'true':
+            pprint.pprint(filedict)
+            sys.exit(1)
 
     # generate folders
     for folder, oct_rights in sorted(filedict['FOLDERS'].items()):
