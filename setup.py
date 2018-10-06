@@ -25,6 +25,19 @@ def defaultdict_factory(*args, **kwargs):
     return defaultdict(dict, *args, **kwargs)
 
 
+def prefix_rewrite(src):
+    dest = re.sub(r'^dot-', '.', src)
+    if sys.platform.startswith('openbsd'):
+        if src.startswith('dot-linux'):
+            return False
+    dest = re.sub(r'^.openbsd-', '.', dest)
+    if sys.platform.startswith('linux'):
+        if src.startswith('dot-openbsd'):
+            return False
+    dest = re.sub(r'^.linux-', '.', dest)
+    return dest
+
+
 def addfiles(filedict, root, tfolder, files):
     """ add Files to Source/Target Dict for ln -s """
     for s in files:
@@ -32,17 +45,9 @@ def addfiles(filedict, root, tfolder, files):
             continue
         if root in BLACKLIST:
             continue
-
-        t = re.sub(r'^dot-', '.', s)
-        if sys.platform.startswith('openbsd'):
-            if s.startswith('dot-linux'):
-                continue
-            t = re.sub(r'^.openbsd-', '.', t)
-        if sys.platform.startswith('linux'):
-            if s.startswith('dot-openbsd'):
-                continue
-            t = re.sub(r'^.linux-', '.', t)
-
+        t = prefix_rewrite(s)
+        if not t:
+            continue
         s = os.path.join(root, s)
         filedict['FILES'][s] = os.path.join(tfolder, t)
     return filedict
