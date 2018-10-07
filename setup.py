@@ -17,6 +17,7 @@ GITFOLDER = [ x[0] for x in os.walk(os.path.join(MYPATH, '.git'))]
 BLACKLIST = set([ MYNAME,
                 '.gitignore',
                 'README.md',
+                'install.pl',
                 ] + GITFOLDER )
 
 
