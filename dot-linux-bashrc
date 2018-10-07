@@ -112,8 +112,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PATH=$PATH:/usr/local/go/bin
+# add go-lang to path
+if [ -d /usr/local/go/bin ]; then
+    export PATH=$PATH:/usr/local/go/bin
+fi
 
-eval `ssh-agent -s` >/dev/null 2>&1
-ssh-add ~/.ssh/id_rsa 2>/dev/null
+if [ -d $HOME/go/bin ]; then
+    export PATH=$PATH:$HOME/go/bin
+fi
 
