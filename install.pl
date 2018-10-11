@@ -11,16 +11,17 @@ use Data::Dumper;
 use File::Basename;
 use File::Find;
 use File::stat;
-use File::stat ":FIELDS";
+use File::stat ':FIELDS';
+use File::Spec::Functions qw(abs2rel);
+##  use Fcntl ':mode';
 use IO::Dir;
-
 
 my $sourcedir  = dirname( abs_path(__FILE__) );
 my $scriptname = basename(__FILE__);
-my @files;
-my @folders;
+my $csv_file   = join('/', ($sourcedir, 'install.csv'));
+my @found;
 
-sub dirEmpty { ! grep !/^\.{1,2}\z/, IO::Dir->new(@_)->read }
+sub dirEmpty { !grep !/^\.{1,2}\z/, IO::Dir->new(@_)->read }
 
 sub preprocess {
     # print Dumper(grep { -f or (-d and /^[^.]/) } @_);
@@ -31,40 +32,60 @@ sub preprocess {
           && $_ !~ /^$scriptname/
           && $_ !~ /^setup.py/
           && $_ !~ /^README.md/
+          && $_ !~ /^install.csv/
     } @_;
 }
 
 sub wanted {
-    push @files,   $File::Find::name if -f;
-    push @folders, $File::Find::name if -d;
+    push @found, $File::Find::name if -f;
+    push @found, $File::Find::name if -d;
     return;
 }
-
-find( { preprocess => \&preprocess, wanted => \&wanted }, $sourcedir );
 
 sub getPermissions {
     my $fh = $_[0];
     stat($fh) or die "Can't stat $fh : $!";
-    my $perms = $st_mode & 07777;
-    my $octperms = sprintf("%lo",$perms);
-    my $uid = getpwuid($st_uid);
-    my $gid = getgrgid($st_gid);
-    print "<$fh> uid: $uid is perms: $perms $octperms uid: $st_uid gid: $st_gid nlink: $st_nlink mode: $st_mode atime: $st_atime mtime: $st_mtime ctime: $st_ctime\n";
+    my $relname = abs2rel( $fh, $sourcedir );
+    my $octperm  = sprintf '%04o', $st_mode & 07777;
+    my $uid_name = getpwuid($st_uid);
+    my $gid_name = getgrgid($st_gid);
+
+    # Folder or File relative to source is .
+    if ( $relname eq '.' ) { return }
+
+    my %permissions = (
+        'name'     => $relname,
+        'uid_name' => $uid_name,
+        'gid_name' => $gid_name,
+        'uid'      => $st_uid,
+        'gid'      => $st_gid,
+        'octperm'  => $octperm,
+        'mode'     => $st_mode,
+        'atime'    => $st_atime,
+        'mtime'    => $st_mtime,
+        'ctime'    => $st_ctime,
+    );
+    return \%permissions;
 }
+
+find( { preprocess => \&preprocess, wanted => \&wanted }, $sourcedir );
+
+my @CSV_ENTRIES;
 
 # remove empty folders
-for my $folder (@folders) {
-    if ( dirEmpty($folder) ) { pop @folders }
-    getPermissions($folder);
+for my $idx (@found) {
+    if ( -d $idx  && dirEmpty($idx)) { pop @found }
+    push @CSV_ENTRIES, getPermissions($idx);
 }
 
-for my $file (@files) {
-    stat($file) or die "Can't stat $file: $!";
-    print "$file is uid: $st_uid gid: $st_gid nlink: $st_nlink mode: $st_mode atime: $st_atime mtime: $st_mtime ctime: $st_ctime\n";
-}
-say $sourcedir . ' files:';
-print Dumper(@files);
-say $sourcedir . ' folders:';
-print Dumper(@folders);
+my @keynames = ('name', 'uid_name', 'gid_name', 'uid', 'gid', 'octperm', 'mode');
+# my $mode = 0644;   chmod $mode, "foo";      # this is best
+open(my $filehandle, '>:encoding(UTF-8)', $csv_file) or
+    die("Could not open file '$csv_file' $!");
+
+    for my $line (@CSV_ENTRIES) {
+        print $filehandle join( ';', @{$line}{@keynames} ) ."\n";
+    }
+close($filehandle);
 
 exit;
