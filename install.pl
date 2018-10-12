@@ -105,10 +105,29 @@ sub readCSV {
 }
 
 sub showusage {
-    my $msg = <<'EOF';
-helptext here.
+    my $msg = <<"EOF";
+Usage $SCRIPTNAME [OPTIONS]:
+Optional Arguments:
+    --help, -h, -?         for help
+    --debug, -d            for debug and exit without doing
+    --filename=Filename    CSV_FILE for READING/WRITING (Default=$CSV_FILE)
+    --basefolder=Folder    ROOT_DIRECTORY for GET/SET Permissions (Default=$SOURCEDIR)
+Needed Arguments:
+    --setperm              SET FILE and DIRECTORY Permissions of <basefolder> from <filename>
+    --getperm              GET FILE and DIRECTORY Permissions of <basefolder> to <filename>
 EOF
     return print $msg
+}
+
+sub yesno {
+    print "$_[0]";
+    print "Enter *Y*es|*N*o: ";
+    chomp(my $input = <STDIN>);
+    if ($input =~ /^[Y|J]?$/i) {
+        return 1;
+    } elsif ($input =~ /^[Q|N]$/i) {
+        return;
+    }
 }
 
 sub main {
@@ -117,20 +136,36 @@ sub main {
     my $getperm = ''; # option variable with default value (false)
 
     my %h = (
-        'help'         => \&showusage,
-        'debug'        => $debug,
-        'setperm'      => $setperm,
-        'getperm'      => $getperm,
-        'filename'     => $CSV_FILE,
-        'searchfolder' => $SOURCEDIR,
+        'help'       => \&showusage,
+        'debug'      => $debug,
+        'setperm'    => $setperm,
+        'getperm'    => $getperm,
+        'filename'   => $CSV_FILE,
+        'basefolder' => $SOURCEDIR,
     );
 
-    GetOptions(\%h, 'help|?', 'debug', 'setperm', 'getperm', 'filename=s')
-        or die("Error in command line arguments\n");
+    GetOptions(\%h, 'help|?', 'debug', 'setperm', 'getperm', 'basefolder=s', 'filename=s')
+        or die("Error in command line Arguments. Use -h for help.\n");
 
     if ( $h{debug} ) { print Dumper(\%h) ; return}
+    if (! -d $h{basefolder} ) { die("basefolder is not a directory! $!\n")}
 
-    #print Dumper(\%h);
+    if ( $h{setperm} ) {
+        # set permissions
+        print "setperm\n";
+        return;
+    } elsif ($h{getperm}) {
+        # get permissions
+        if (yesno("Get Permissions of $h{basefolder} and write it to $h{filename}?\n")) {
+            if (&createCSV) {
+                print "...done\n";
+            };
+        };
+        return;
+    };
+
+    &showusage;
+
 
 }
 
