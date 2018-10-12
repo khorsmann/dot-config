@@ -156,7 +156,8 @@ sub main {
         return;
     } elsif ($h{getperm}) {
         # get permissions
-        if (yesno("Get Permissions of $h{basefolder} and write it to $h{filename}?\n")) {
+        my $question = "Get Permissions of $h{basefolder} and write it to $h{filename}?\n";
+        if (yesno($question)) {
             if (&createCSV) {
                 print "...done\n";
             };
