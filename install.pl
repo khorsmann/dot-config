@@ -13,6 +13,7 @@ use File::Find;
 use File::stat;
 use File::stat ':FIELDS';
 use File::Spec::Functions qw(abs2rel);
+use Getopt::Long;
 ##  use Fcntl ':mode';
 use IO::Dir;
 
@@ -90,7 +91,6 @@ sub createCSV {
     close($filehandle);
 }
 
-# my $mode = 0644;   chmod $mode, "foo";      # this is best
 
 sub readCSV {
     open( my $filehandle, '<:encoding(UTF-8)', $CSV_FILE )
@@ -111,6 +111,30 @@ EOF
     return print $msg
 }
 
-&showusage;
+sub main {
+    my $debug = 0;
+    my $setperm = ''; # option variable with default value (false)
+    my $getperm = ''; # option variable with default value (false)
+
+    my %h = (
+        'help'         => \&showusage,
+        'debug'        => $debug,
+        'setperm'      => $setperm,
+        'getperm'      => $getperm,
+        'filename'     => $CSV_FILE,
+        'searchfolder' => $SOURCEDIR,
+    );
+
+    GetOptions(\%h, 'help|?', 'debug', 'setperm', 'getperm', 'filename=s')
+        or die("Error in command line arguments\n");
+
+    if ( $h{debug} ) { print Dumper(\%h) ; return}
+
+    #print Dumper(\%h);
+
+}
+
+&main;
+# my $mode = 0644;   chmod $mode, "foo";      # this is best
 #&readCSV;
 #print Dumper(\@CSV_ENTRIES);
