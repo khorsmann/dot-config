@@ -8,7 +8,7 @@ use warnings;
 use Cwd 'abs_path';
 use Data::Dumper;
 
-# use Fcntl ':mode';
+use Fcntl ':mode';
 use File::Basename;
 use File::Find;
 use File::stat;
@@ -22,11 +22,18 @@ my $SCRIPTNAME = basename(__FILE__);
 my $CSV_FILE   = join('/', ($SOURCEDIR, 'install.csv'));
 my @CSV_ENTRIES;
 my @FOUND;
+my @FTYPES;
+$FTYPES[S_IFDIR] = "d";
+$FTYPES[S_IFCHR] = "c";
+$FTYPES[S_IFBLK] = "b";
+$FTYPES[S_IFREG] = "f";
+$FTYPES[S_IFIFO] = "f";
+$FTYPES[S_IFLNK] = "l";
+$FTYPES[S_IFSOCK] = "s";
 
 sub dirEmpty { !grep !/^\.{1,2}\z/, IO::Dir->new(@_)->read }
 
 sub preprocess {
-
     # print Dumper(grep { -f or (-d and /^[^.]/) } @_);
     # ignore unwanted files
     return grep {
@@ -34,7 +41,6 @@ sub preprocess {
           && $_ !~ /^.gitignore/
           && $_ !~ /^$SCRIPTNAME/
           && $_ !~ /^setup.py/
-
           && $_ !~ /^README.md/
           && $_ !~ /^install.csv/
     } @_;
@@ -46,7 +52,7 @@ sub wanted {
     return 1;
 }
 
-my @KEYNAMES = ('name', 'uid_name', 'gid_name', 'uid', 'gid', 'octperm', 'mode');
+my @KEYNAMES = ('name', 'uid_name', 'gid_name', 'uid', 'gid', 'octperm', 'mode', 'ftype');
 
 sub getPermission {
     my $fh = $_[0];
@@ -55,7 +61,7 @@ sub getPermission {
     my $octperm  = sprintf '%04o', $st_mode & 07777;
     my $uid_name = getpwuid($st_uid);
     my $gid_name = getgrgid($st_gid);
-
+    my $filetype = $FTYPES[S_IFMT($st_mode)];
     # Folder or File relative to source is .
     if ($relname eq '.') { return }
 
@@ -67,12 +73,12 @@ sub getPermission {
         'gid'      => $st_gid,
         'octperm'  => $octperm,
         'mode'     => $st_mode,
+        'ftype'    => $filetype,
     );
     return \%permissions;
 }
 
 sub compareHashValues {
-
     # return FALSE if HashValues are NOT SAME
     # return TRUE  if HashValues are THE SAME
     my ($a, $b) = (@_);
@@ -86,8 +92,8 @@ sub compareHashValues {
         }
     }
 
+    # todo - smartmatch is deprecated
     if (@{aValues} ~~ @{bValues}) {
-
         # true
         return 1;
     }
@@ -107,10 +113,12 @@ sub setPermission {
         my $uid = getpwnam($a->{uid_name});
         my $gid = getgrnam($a->{gid_name});
         my $fh  = join('/', ($SOURCEDIR, $a->{name}));
+
         print "\tchmod $a->{octperm} $fh\n";
-        chmod oct($a->{octperm}), "$fh";
         print "\tchown $a->{uid_name}:$a->{gid_name} $fh\n";
         print "\tchown $uid:$gid $fh\n";
+
+        chmod oct($a->{octperm}), "$fh";
         chown $uid, $gid, "$fh";
     }
     else {
