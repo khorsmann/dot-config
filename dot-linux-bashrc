@@ -112,16 +112,21 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# add go-lang to path
+
+## GO-LANG
+#
+# add system-wide go-lang to path
 if [ -d /usr/local/go/bin ]; then
     export PATH=$PATH:/usr/local/go/bin
 fi
 
-if [ -d $HOME/go/bin ]; then
+# add local go-lang to path
+if [ -d ${HOME}/go/bin ]; then
     export PATH=$PATH:$HOME/go/bin
 fi
 
-
+# bash magic
+# add git-prompt.sh
 if [ -f ~/.bash/git-prompt.sh ] ; then
     source ~/.bash/git-prompt.sh        # Show git branch name at command prompt
     export GIT_PS1_SHOWCOLORHINTS=true  # Option for git-prompt.sh to show branch name in color
@@ -129,5 +134,15 @@ if [ -f ~/.bash/git-prompt.sh ] ; then
     export GIT_PS1_SHOWUNTRACKEDFILES=true
     export GIT_PS1_SHOWUPSTREAM="auto"
     PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
+fi
+
+# CPAN and Stuff
+# add perl5 to path
+if [ -d ${HOME}/perl5 ] ; then
+    PATH="${HOME}/perl5/bin${PATH:+:${PATH}}"; export PATH;
+    PERL5LIB="${HOME}/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+    PERL_LOCAL_LIB_ROOT="${HOME}/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+    PERL_MB_OPT="--install_base \"${HOME}/perl5\""; export PERL_MB_OPT;
+    PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"; export PERL_MM_OPT;
 fi
 
