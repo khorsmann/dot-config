@@ -6,7 +6,7 @@ Symlinks $dot-config/.dot-file to $HOME/.file<br/>
 
 ## Example run setup.py
 
-The setup.py Script prints SHELL equivalent of current the doing.<br/>
+The setup.py Script prints SHELL equivalent what happens right now.<br/>
 If a file is already there, it becomes an .bak suffix and will renamed.<br/>
 
 ```shell
