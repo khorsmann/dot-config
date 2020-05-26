@@ -146,3 +146,6 @@ if [ -d ${HOME}/perl5 ] ; then
     PERL_MM_OPT="INSTALL_BASE=${HOME}/perl5"; export PERL_MM_OPT;
 fi
 
+if [ -f $HOME/.vault_pass.txt ] ; then
+    export ANSIBLE_VAULT_PASSWORD_FILE=$HOME/.vault_pass.txt
+fi
