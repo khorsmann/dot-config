@@ -20,5 +20,8 @@ if has("autocmd")
     au FileType go set noexpandtab tabstop=8 shiftwidth=8 softtabstop=8
     au BufRead,BufNewFile *.json setfiletype javascript
     au BufRead,BufNewFile Vagrantfile setfiletype ruby
+    " add yaml stuffs
+    au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml 
+    autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
   augroup END
 endif
