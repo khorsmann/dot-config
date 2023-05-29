@@ -68,7 +68,7 @@ case "$TERM" in
 xterm*|rxvt*)
     PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
     ;;
-*)
+    *)
     ;;
 esac
 
@@ -114,7 +114,6 @@ fi
 
 
 ## GO-LANG
-#
 # add system-wide go-lang to path
 if [ -d /usr/local/go/bin ]; then
     export PATH=$PATH:/usr/local/go/bin
@@ -149,7 +148,6 @@ fi
 if [ -f $HOME/.vault_pass.txt ] ; then
     export ANSIBLE_VAULT_PASSWORD_FILE=$HOME/.vault_pass.txt
 fi
-eval "$(pyenv init -)"
 
 # install rust to get cargo
 if [ -d $HOME/.cargo ]; then
@@ -166,3 +164,13 @@ if [ -d $HOME/.nvm ]; then
     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 fi
+
+# python version manager - pyenv
+if [ -d $HOME/.pyenv ]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+fi
+
+
+
