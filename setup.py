@@ -7,7 +7,7 @@ from collections import defaultdict
 import pprint
 
 """
-BLACKLIST = filenames and/or absulute path to folder to ignore them
+BLACKLIST = filenames and/or absolute path to folder to ignore them
 """
 
 HOME = os.environ['HOME']

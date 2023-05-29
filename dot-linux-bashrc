@@ -149,3 +149,7 @@ fi
 if [ -f $HOME/.vault_pass.txt ] ; then
     export ANSIBLE_VAULT_PASSWORD_FILE=$HOME/.vault_pass.txt
 fi
+eval "$(pyenv init -)"
+source "$HOME/.cargo/env"
+source "$HOME/.bash_completion/alacritty.bash"
+
