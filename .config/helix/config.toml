@@ -1,3 +1,32 @@
+theme = "base16_default_dark"
+
+[editor]
+mouse = false
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+
+[editor.whitespace]
+render = "all"
+#render = "none"
+# or control each character
+#[editor.whitespace.render]
+#space = "all"
+#tab = "all"
+#newline = "none"
+
+[editor.whitespace.characters]
+space = "·"
+nbsp = "⍽"
+tab = "→"
+newline = "⏎"
+tabpad = "·" # Tabs will look like "→···" (depending on tab width)
+
 ## https://raw.githubusercontent.com/LGUG2Z/helix-vim/master/config.toml
 [keys.normal]
 # Quick iteration on config changes
