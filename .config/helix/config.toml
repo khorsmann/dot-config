@@ -2,6 +2,7 @@ theme = "base16_default_dark"
 
 [editor]
 mouse = false
+true-color = true
 
 [editor.cursor-shape]
 insert = "bar"

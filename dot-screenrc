@@ -43,4 +43,7 @@ startup_message off
 term "screen-256color"
 # needs .ssh/rc
 setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
+
+# helix fix disable escape-time (or set 10)
+maptimeout 0
 # EOF  vim: ts=8 et nowrap

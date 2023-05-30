@@ -1,4 +1,6 @@
-
+#theme: base16_default_dark
+#import:
+# - ~/.config/alacritty/themes/themes/{theme}.yaml
 key_bindings:
   - { key: V, mods: Control, action: Paste }
   - { key: C, mods: Control, action: Copy }
