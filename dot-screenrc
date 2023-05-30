@@ -40,7 +40,8 @@ termcapinfo xterm ti@:te@
 #defbce "on"
 
 startup_message off
-term "screen-256color"
+# term "screen-256color"
+term "xterm-256color"
 # needs .ssh/rc
 setenv SSH_AUTH_SOCK $HOME/.ssh/ssh_auth_sock
 
