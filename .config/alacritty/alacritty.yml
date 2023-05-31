@@ -1,8 +1,35 @@
-#theme: base16_default_dark
 #import:
-# - ~/.config/alacritty/themes/themes/{theme}.yaml
+#  - ~/.config/alacritty/themes/themes/catppuccin.yaml
 key_bindings:
   - { key: V, mods: Control, action: Paste }
   - { key: C, mods: Control, action: Copy }
-  - { key: PageUp,  action: ScrollLineUp }
+  - { key: PageUp, action: ScrollLineUp }
   - { key: PageDown, action: ScrollLineDown }
+colors:
+  # Default colors
+  primary:
+    background: '#000000'
+    foreground: '#dddddd'
+
+  # Normal colors
+  normal:
+    black: '#000000'
+    red: '#cc0403'
+    green: '#19cb00'
+    yellow: '#cecb00'
+    blue: '#0d73cc'
+    magenta: '#cb1ed1'
+    cyan: '#0dcdcd'
+    white: '#dddddd'
+
+  # Bright colors
+  bright:
+    black: '#767676'
+    red: '#f2201f'
+    green: '#23fd00'
+    yellow: '#fffd00'
+    blue: '#1a8fff'
+    magenta: '#fd28ff'
+    cyan: '#14ffff'
+    white: '#ffffff'
+theme: Kitty
