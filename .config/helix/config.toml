@@ -12,13 +12,15 @@ select = "underline"
 [editor.file-picker]
 hidden = false
 
-[editor.whitespace]
-render = "all"
+#[editor.whitespace]
+#render = "all"
 #render = "none"
 # or control each character
-#[editor.whitespace.render]
+[editor.whitespace.render]
 #space = "all"
-#tab = "all"
+tab = "all"
+#newline = "all"
+nbsp = "all"
 #newline = "none"
 
 [editor.whitespace.characters]
