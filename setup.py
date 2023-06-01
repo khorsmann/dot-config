@@ -93,7 +93,6 @@ def main():
         # symlink is wrong, remove symlink
         if os.path.realpath(src) != os.path.realpath(dest):
             _rdest = os.path.realpath(dest)
-            print(type(_rdest))
             print("destination file is not correct: ", _rdest)
             os.unlink(dest)
         if not os.path.islink(dest):
