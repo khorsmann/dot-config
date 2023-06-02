@@ -92,9 +92,10 @@ def main():
             os.rename(dest, bak)
         # symlink is wrong, remove symlink
         if os.path.realpath(src) != os.path.realpath(dest):
-            _rdest = os.path.realpath(dest)
-            print("destination file is not correct: ", _rdest)
-            os.unlink(dest)
+            if os.path.islink(dest):
+                _rdest = os.path.realpath(dest)
+                print("destination file is not correct: ", _rdest)
+                os.unlink(_rdest)
         if not os.path.islink(dest):
             print("ln -s {0} {1}".format(src, dest))
             os.symlink(src, dest)
