@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/env bash
 # ansible-desktop OK
 sudo add-apt-repository ppa:maveonair/helix-editor
 sudo apt update
