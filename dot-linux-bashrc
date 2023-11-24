@@ -161,3 +161,5 @@ fi
 if [ -f $HOME/.bash/work.sh ]; then
     source $HOME/.bash/work.sh
 fi
+# apt-get install exa
+alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
