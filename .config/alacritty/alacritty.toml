@@ -1,0 +1,69 @@
+[shell]
+args = ["--cd ~"]
+program = 'C:\Windows\System32\wsl.exe'
+
+[colors.bright]
+black = "#767676"
+blue = "#1a8fff"
+cyan = "#14ffff"
+green = "#23fd00"
+magenta = "#fd28ff"
+red = "#f2201f"
+white = "#ffffff"
+yellow = "#fffd00"
+
+[colors.normal]
+black = "#000000"
+blue = "#0d73cc"
+cyan = "#0dcdcd"
+green = "#19cb00"
+magenta = "#cb1ed1"
+red = "#cc0403"
+white = "#dddddd"
+yellow = "#cecb00"
+
+[colors.primary]
+background = "#000000"
+foreground = "#dddddd"
+
+[cursor.style]
+blinking = "Always"
+shape = "Underline"
+
+[font]
+size = 16.0
+
+[font.normal]
+family = "Consolas"
+style = "Regular"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Shift"
+
+[[keyboard.bindings]]
+action = "ScrollLineUp"
+key = "PageUp"
+
+[[keyboard.bindings]]
+action = "ScrollLineDown"
+key = "PageDown"
+
+[window]
+decorations_theme_variant = "None"
+dynamic_title = true
+opacity = 1
+
+[window.dimensions]
+columns = 100
+lines = 80
+
+[window.padding]
+x = 2
+y = 3
