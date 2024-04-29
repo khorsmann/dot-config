@@ -163,3 +163,5 @@ if [ -f $HOME/.bash/work.sh ]; then
 fi
 # apt-get install exa
 alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
+alias gu='git pull'
+
