@@ -2,7 +2,7 @@
 #  - ~/.config/alacritty/themes/themes/catppuccin.yaml
 key_bindings:
   - { key: V, mods: Control, action: Paste }
-  #- { key: C, mods: Control, action: Copy }
+  - { key: C, mods: Control, action: Copy }
   - { key: PageUp, action: ScrollLineUp }
   - { key: PageDown, action: ScrollLineDown }
 window:
