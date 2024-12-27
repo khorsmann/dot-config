@@ -1,6 +1,6 @@
-[shell]
-args = ["--cd ~"]
-program = 'C:\Windows\System32\wsl.exe'
+#[shell]
+#args = ["--cd ~"]
+#program = 'C:\Windows\System32\wsl.exe'
 
 [colors.bright]
 black = "#767676"

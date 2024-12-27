@@ -161,10 +161,14 @@ fi
 if [ -f $HOME/.bash/work.sh ]; then
     source $HOME/.bash/work.sh
 fi
-# apt-get install exa
-alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
-alias gu='git pull'
 
 if [ -S /run/user/$(id -au)/podman/podman.sock ]; then
     export DOCKER_HOST="unix://$XDG_RUNTIME_DIR/podman/podman.sock"
 fi
+export AUDIBLE_PLUGIN_DIR="$HOME/.audible/plugins/"
+
+# apt-get install exa
+alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
+alias gu='git pull'
+alias gp='git push --tags'
+
