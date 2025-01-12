@@ -45,7 +45,7 @@ mods = "Control"
 [[keyboard.bindings]]
 action = "Copy"
 key = "C"
-mods = "Shift"
+mods = "Alt"
 
 [[keyboard.bindings]]
 action = "ScrollLineUp"
