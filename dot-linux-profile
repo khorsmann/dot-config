@@ -28,6 +28,20 @@ fi
 
 SSH_ENV="$HOME/.ssh/environment"
 
+function check_ssh_add() {
+  result=$(/usr/bin/ssh-add -L >/dev/null; echo $?)
+  case $result in
+    0)
+      # Nichts machen
+      ;;
+    *)
+      # /usr/bin/ssh-add aufrufen
+      /usr/bin/ssh-add
+      ;;
+  esac
+}
+
+
 function start_agent {
     echo "Initialising new SSH agent..."
     /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
@@ -47,6 +61,7 @@ if [ -f "${SSH_ENV}" ]; then
 else
     start_agent;
 fi
+check_ssh_add;
 
 # pyenv
 if [ -d $HOME/.pyenv ]; then
