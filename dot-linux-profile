@@ -55,3 +55,5 @@ if [ -d $HOME/.pyenv ]; then
     eval "$(pyenv init -)"
 fi
 
+. "$HOME/.cargo/env"
+

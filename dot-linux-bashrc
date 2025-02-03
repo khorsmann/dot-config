@@ -112,13 +112,15 @@ fi
 
 # bash magic
 # add git-prompt.sh
-if [ -f ~/.bash/git-prompt.sh ] ; then
-    source ~/.bash/git-prompt.sh        # Show git branch name at command prompt
-    export GIT_PS1_SHOWCOLORHINTS=true  # Option for git-prompt.sh to show branch name in color
-    export GIT_PS1_SHOWDIRTYSTATE=true
-    export GIT_PS1_SHOWUNTRACKEDFILES=true
-    export GIT_PS1_SHOWUPSTREAM="auto"
-    PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
+if [ ! -f $HOME/bin/oh-my-posh ] ; then
+    if [ -f ~/.bash/git-prompt.sh ] ; then
+        source ~/.bash/git-prompt.sh        # Show git branch name at command prompt
+        export GIT_PS1_SHOWCOLORHINTS=true  # Option for git-prompt.sh to show branch name in color
+        export GIT_PS1_SHOWDIRTYSTATE=true
+        export GIT_PS1_SHOWUNTRACKEDFILES=true
+        export GIT_PS1_SHOWUPSTREAM="auto"
+        PROMPT_COMMAND='__git_ps1 "\u@\h:\w" "\\\$ "'
+    fi
 fi
 
 # CPAN and Stuff
@@ -163,3 +165,52 @@ if [ -f $HOME/.bash/work.sh ]; then
 fi
 # apt-get install exa
 alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
+. "$HOME/.cargo/env"
+
+function git-prune-branches() {
+        echo "switching to main branch.."
+        git branch | grep 'main' | xargs -n 1 git checkout
+        echo "fetching with -p option...";
+        git fetch -p;
+        echo "running pruning of local branches"
+        git branch -vv | grep ': gone]'|  grep -v "\*" | awk '{ print $1; }' | xargs -r git branch -d ;
+}
+alias gpb='git-prune-branches'
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+if [ -f "$HOME/bin/oh-my-posh" ]; then
+    unset $PS1
+    unset $PROMPT_COMMAND
+    # eval "$($HOME/bin/oh-my-posh init bash --config $HOME/.config/oh-my-posh/zen.toml)"
+    eval "$($HOME/bin/oh-my-posh init bash)"
+fi
+###-begin-projen-completions-###
+#
+# yargs command completion script
+#
+# Installation: node_modules/.bin/projen completion >> ~/.bashrc
+#    or node_modules/.bin/projen completion >> ~/.bash_profile on OSX.
+#
+_projen_yargs_completions()
+{
+    local cur_word args type_list
+
+    cur_word="${COMP_WORDS[COMP_CWORD]}"
+    args=("${COMP_WORDS[@]}")
+
+    # ask yargs to generate completions.
+    type_list=$(node_modules/.bin/projen --get-yargs-completions "${args[@]}")
+
+    COMPREPLY=( $(compgen -W "${type_list}" -- ${cur_word}) )
+
+    # if no match was found, fall back to filename completion
+    if [ ${#COMPREPLY[@]} -eq 0 ]; then
+      COMPREPLY=()
+    fi
+
+    return 0
+}
+complete -o bashdefault -o default -F _projen_yargs_completions projen
+###-end-projen-completions-###
+

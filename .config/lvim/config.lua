@@ -30,7 +30,7 @@ lvim.lsp.document_highlight = true
 
 -- plugins
 -- ==========================================
-require("user.plugins").setup()
+-- require("user.plugins").setup()
 
 -- -- Persistent Folds
 local augroup = vim.api.nvim_create_augroup
@@ -81,5 +81,5 @@ vim.api.nvim_create_autocmd({ "InsertEnter", "WinLeave" }, {
 })
 
 -- Autocmd commands
-lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
-table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
+--lvim.builtin.cmp.formatting.source_names["copilot"] = "(Copilot)"
+--table.insert(lvim.builtin.cmp.sources, 1, { name = "copilot" })
