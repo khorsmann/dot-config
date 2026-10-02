@@ -5,17 +5,41 @@ export LC_ALL="de_DE.UTF-8"
 
 PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/X11R6/bin:/usr/local/sbin:/usr/local/bin
 export PATH
+
 : ${HOME='/root'}
 export HOME
+
 ENV="$HOME/.kshrc"
 export ENV
-export PS1='\e[0;31m[\h:\w]\n\$ \e[m'
-export HISTFILE=/var/root.history/.sh_history
-export HISTSIZE=10000
 
-PKG_PATH=http://ftp.fr.openbsd.org/pub/OpenBSD/$(uname -r)/packages/$(arch -s)
-PKG_PATH=https://stable.mtier.org/updates/$(uname -r)/$(arch -s):${PKG_PATH}
-export PKG_PATH
+# Prompt-Farbe: root rot, normale Benutzer grün
+ESC=$(printf '\033')
+if [ "$(id -u)" -eq 0 ]; then
+    PS1="${ESC}[0;31m[\h:\w]\n\$ ${ESC}[m"
+else
+    PS1="${ESC}[0;32m[\h:\w]\n\$ ${ESC}[m"
+fi
+export PS1
+
+# History: bevorzugt im HOME, Fallback nach /var/tmp falls HOME nicht beschreibbar ist
+HISTSIZE=10000
+export HISTSIZE
+
+if [ -d "$HOME" ] && [ -w "$HOME" ]; then
+    HISTFILE="$HOME/.history"
+else
+    histdir="/var/tmp/ksh-history-$(id -u)"
+    if [ ! -d "$histdir" ]; then
+        mkdir -m 700 "$histdir" 2>/dev/null
+    fi
+    if [ -d "$histdir" ] && [ -O "$histdir" ]; then
+        chmod 700 "$histdir" 2>/dev/null
+        HISTFILE="$histdir/history"
+    else
+        HISTFILE="/var/tmp/.history-$(id -u)"
+    fi
+fi
+export HISTFILE
 
 umask 022
 
